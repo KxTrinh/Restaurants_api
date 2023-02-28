@@ -15,4 +15,8 @@ class RestaurantPolicy < ApplicationPolicy
     record.user == user
   end
 
+  def create?
+    # Any logged in user can create a restaurant
+    !user.nil?
+  end
 end
