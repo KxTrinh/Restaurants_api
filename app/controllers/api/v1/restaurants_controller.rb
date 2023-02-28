@@ -1,7 +1,7 @@
 # app/controllers/api/v1/restaurants_controller.rb
 class Api::V1::RestaurantsController < Api::V1::BaseController
-  acts_as_token_authentication_handler_for User, except: [ :index, :show ]
-  before_action :set_restaurant, only: %i[show update]
+  acts_as_token_authentication_handler_for User, except: %i[index show]
+  before_action :set_restaurant, only: %i[show update destroy]
 
   def index
     @restaurants = policy_scope(Restaurant)
@@ -24,10 +24,17 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
     authorize @restaurant
 
     if @restaurant.save
-      render :show
+      render :show, status: :created
     else
       render_error
     end
+  end
+
+  def destroy
+    @restaurant.destroy
+    # head :no_content
+    render json: { message: 'Restaurant was successfully destroyed !'}
+    # No need to create a `destroy.json.jbuilder` view
   end
 
   private
