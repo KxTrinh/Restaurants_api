@@ -5,6 +5,8 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
   end
 
   def show
+    @restaurant = Restaurant.find(params[:id])
+    authorize @restaurant
   end
 
   private
